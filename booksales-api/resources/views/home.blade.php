@@ -37,7 +37,7 @@
 <body>
     <h1>Tekan Tombol di bawah</h1>
 
-    <a href="{{ route('book') }}" class="button">Halaman Buku</a>
+    <a href="{{ route('author') }}" class="button">Halaman Author</a>
     <a href="{{ route('genre') }}" class="button">Halaman Genre</a>
 
 </body>
