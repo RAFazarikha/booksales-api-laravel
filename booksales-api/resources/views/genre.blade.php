@@ -46,6 +46,23 @@
             height: auto;
             border-radius: 4px;
         }
+
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 10px;
+            font-size: 16px;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -65,5 +82,6 @@
             @endforeach
         </tbody>
     </table>
+    <a href="{{ route('home') }}" class="button">Kembali</a>
 </body>
 </html>

@@ -7,7 +7,7 @@ use App\Http\Controllers\GenreController;
 
 Route::get('/', function () {
     return view('home');
-});
+})->name('home');
 
 Route::get('/book', [BookController::class, 'index'])->name('book');
 
