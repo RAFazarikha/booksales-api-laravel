@@ -6,11 +6,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
 
 Route::get('/', function () {
-    return view('home');
-})->name('home');
+    return view('welcome');
+});
 
-Route::get('/book', [BookController::class, 'index'])->name('book');
 
-Route::get('/genre', [GenreController::class, 'index'])->name('genre');
-
-Route::get('/author', [AuthorController::class, 'index'])->name('author');
