@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AuthorController extends Controller
@@ -26,7 +27,7 @@ class AuthorController extends Controller
         ], 200);
     }
 
-    public function addAuthor(Request $request){
+    public function store(Request $request){
         
         // 1. Validasi data
         $validator = Validator::make($request->all(), [
@@ -61,4 +62,93 @@ class AuthorController extends Controller
             'data' => $author
         ], 201);
     }
+
+    public function show($id){
+        $author = Author::find($id);
+
+        if (!$author) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Author not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Get Author',
+            'data' => $author
+        ], 200);
+    }
+
+    public function update(Request $request, $id){
+        $author = Author::find($id);
+
+        if (!$author) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Author not found',
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'bio' => 'nullable|string|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
+        $data = [
+            'name' => $request->name,
+            'bio' => $request->bio,
+        ];
+
+        if ($request->hasFile('photo')) {
+            $image = $request->file('photo');
+            $image->store('authors', 'public');
+
+            if ($author->photo) {
+                // Hapus foto lama jika ada
+                Storage::disk('public')->delete('authors/' . $author->photo);
+            }
+
+            $data['photo'] = $image->hashName();
+        }
+
+        $author->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Author Updated',
+            'data' => $author
+        ], 200);
+    }
+
+    public function destroy($id){
+        $author = Author::find($id);
+
+        if (!$author) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Author not found',
+            ], 404);
+        }
+
+        if ($author->photo) {
+            Storage::disk('public')->delete('authors/' . $author->photo);
+        }
+
+        $author->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Author Deleted',
+        ], 200);
+    }
+
 }

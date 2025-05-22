@@ -26,7 +26,7 @@ class GenreController extends Controller
         ], 200);
     }
 
-    public function addGenre(Request $request){
+    public function store(Request $request){
         
         // 1. Validasi data
         $validator = Validator::make($request->all(), [
@@ -55,4 +55,76 @@ class GenreController extends Controller
             'data' => $genre
         ], 201);
     }
+
+    public function show($id){
+        $genre = Genre::find($id);
+
+        if (!$genre) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Genre not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Get Genre',
+            'data' => $genre
+        ], 200);
+    }
+
+    public function update(Request $request, $id){
+        $genre = Genre::find($id);
+
+        if (!$genre) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Genre not found',
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ], 422);
+        }
+
+        $data = [
+            'name' => $request->name,
+            'description' => $request->description,
+        ];
+
+        $genre->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Genre Updated',
+            'data' => $genre
+        ], 200);
+    }
+
+    public function destroy($id){
+        $genre = Genre::find($id);
+
+        if (!$genre) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Genre not found',
+            ], 404);
+        }
+
+        $genre->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Genre Deleted',
+        ], 200);
+    }
+
 }
