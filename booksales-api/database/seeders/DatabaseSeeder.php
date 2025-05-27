@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             GenreSeeder::class,
             BookSeeder::class,
             UserSeeder::class,
+            TransactionSeeder::class,
         ]);
 
         // User::factory(10)->create();

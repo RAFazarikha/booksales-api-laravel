@@ -11,7 +11,7 @@ class BookController extends Controller
 {
     public function index()
     {
-        $books = Book::all();
+        $books = Book::with(['author', 'genre'])->get();
 
         if ($books->isEmpty()) {
             return response()->json([
@@ -72,7 +72,7 @@ class BookController extends Controller
     }
 
     public function show($id){
-        $book = Book::find($id);
+        $book = Book::with(['author', 'genre'])->find($id);
 
         if (!$book) {
             return response()->json([
